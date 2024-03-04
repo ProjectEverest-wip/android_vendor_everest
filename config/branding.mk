@@ -21,6 +21,7 @@ EVEREST_NUM_VER := 1.0
 TARGET_PRODUCT_SHORT := $(subst everest_,,$(EVEREST_BUILD_TYPE))
 
 EVEREST_BUILD_TYPE ?= unofficial
+WITH_GAPPS ?= true
 
 # Only include Updater for official  build
 ifeq ($(filter-out official,$(EVEREST_BUILD_TYPE)),)
@@ -36,11 +37,17 @@ ifeq ($(filter-out official,$(EVEREST_BUILD_TYPE)),)
     PRODUCT_DEFAULT_DEV_CERTIFICATE := $(KEYS_LOCATION)
 endif
 
+ifeq ($(WITH_GAPPS),true)
+EVEREST_EDITION := GAPPS
+else
+EVEREST_EDITION := Vanilla
+endif
+
 # Set all versions
 BUILD_DATE := $(shell date -u +%Y%m%d)
 BUILD_TIME := $(shell date -u +%H%M)
 EVEREST_BUILD_VERSION := $(EVEREST_NUM_VER)-$(EVEREST_CODENAME)
-EVEREST_VERSION := $(EVEREST_BUILD_VERSION)-$(EVEREST_BUILD)-$(EVEREST_BUILD_TYPE)-$(BUILD_TIME)-$(BUILD_DATE)
+EVEREST_VERSION := $(EVEREST_BUILD_VERSION)-$(EVEREST_BUILD)-$(EVEREST_BUILD_TYPE)-$(EVEREST_EDITON)-$(BUILD_TIME)-$(BUILD_DATE)
 ROM_FINGERPRINT := everest/$(PLATFORM_VERSION)/$(TARGET_PRODUCT_SHORT)/$(BUILD_TIME)
 EVEREST_DISPLAY_VERSION := $(EVEREST_VERSION)
 RELEASE_TYPE := $(EVEREST_BUILD_TYPE)
@@ -56,4 +63,5 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.everest.fingerprint=$(ROM_FINGERPRINT) \
     ro.everest.version=$(EVEREST_VERSION) \
     ro.modversion=$(EVEREST_VERSION) \
-    ro.everestos.maintainer=$(EVEREST_MAINTAINER)
+    ro.everestos.maintainer=$(EVEREST_MAINTAINER) \
+    ro.everest.edition=$(EVEREST_EDITION)
